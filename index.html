@@ -111,6 +111,14 @@ footer{max-width:1540px;margin:0 auto;padding:0 22px 24px;font-size:11.5px;color
 @media (max-width:1150px){main{grid-template-columns:1fr 1fr}.panel.inputs{grid-column:1/-1}}
 @media (max-width:720px){.logo img{height:34px}main{grid-template-columns:1fr;padding:12px}.two{grid-template-columns:1fr}.row{grid-template-columns:1.2fr 1fr}header{padding:14px}header h1{font-size:17px}.tile .val{font-size:19px}}
 .print-only{display:none!important}
+input#nbo.locked{cursor:pointer}
+.modal{position:fixed;inset:0;background:rgba(0,26,92,.45);display:grid;place-items:center;z-index:50;padding:16px}
+.modal .box{background:#fff;border-radius:16px;max-width:400px;width:100%;padding:20px 20px 16px;box-shadow:0 20px 50px rgba(0,0,0,.3);border-top:5px solid #b07f00}
+.modal h4{margin:0 0 8px;font-size:16px;color:#002a87}
+.modal p{margin:0 0 16px;color:#334155;font-size:13.5px;line-height:1.5}
+.modal .acts{display:flex;justify-content:flex-end;gap:8px}
+.modal .no{background:#fff;color:#334155;border:1px solid #cbd5e1;box-shadow:none}
+.modal .yes2{background:#002a87;color:#fff}
 @media print{
   @page{size:portrait;margin:12mm}
   *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -153,7 +161,7 @@ footer{max-width:1540px;margin:0 auto;padding:0 22px 24px;font-size:11.5px;color
     <div>
       <div class="sec c"><h3>Client Details</h3>
         <div class="row"><label for="client">Client Name</label><div class="v"><input id="client" placeholder="<Enter Client Name>"></div></div>
-        <div class="row"><label for="msp">MSP/VMS Fee %</label><div class="v"><input id="msp" type="number" step="0.1" min="0" value="6"></div></div>
+        <div class="row"><label for="msp">🔒 MSP/VMS Fee %</label><div class="v"><input id="msp" class="locked" type="number" value="0" readonly tabindex="-1" title="Locked – MSP/VMS fee fixed at 0%"></div></div>
         <div class="row"><label for="incr">Incremental Recruiting Costs</label><div class="v"><select id="incr" class="orange">
           <option value="0">None</option><option value="500">Vivian Cost $500</option><option value="1200">Job Boards $1,200</option><option value="other">Other (enter)</option></select></div></div>
         <div class="row" id="incrOtherRow" hidden><label for="incrOther">Other one-time cost ($)</label><div class="v"><input id="incrOther" type="number" min="0" step="1" value="0"></div></div>
@@ -174,7 +182,7 @@ footer{max-width:1540px;margin:0 auto;padding:0 22px 24px;font-size:11.5px;color
         <div class="row"><label for="hrs">Expected hours per week</label><div class="v"><input id="hrs" type="number" min="0" step="1" value="36"></div></div>
         <div class="row"><label for="shift">Expected hours per shift</label><div class="v"><input id="shift" type="number" min="0" step="1" value="12"></div></div>
         <div class="row"><label for="orientBy">Who pays for orientation?</label><div class="v"><select id="orientBy"><option>Cyberhelp</option><option>Client</option></select></div></div>
-        <div class="row"><label for="nbo">→ Non-billable orientation hours</label><div class="v"><input id="nbo" class="opt" type="number" min="0" step="1" value="12"></div></div>
+        <div class="row"><label for="nbo">→ <span id="nboLock">🔒</span> Non-billable orientation hours</label><div class="v"><input id="nbo" class="locked" type="number" min="0" step="1" value="0" readonly title="Locked at 0 – click to add NBO hours"></div></div>
       </div>
     </div>
     <div>
@@ -252,6 +260,13 @@ footer{max-width:1540px;margin:0 auto;padding:0 22px 24px;font-size:11.5px;color
   <p class="note">Net Margin % = Net Margin ÷ Revenue. Load applies to W2 pay only (RT + OT + bonus/reimbursement), not per diem. Non-billable orientation hours are paid to the nurse but not billed. Nothing you type here is saved or sent anywhere – all math runs in your browser.</p>
 </section>
 </main>
+<div class="modal" id="nboModal" hidden role="dialog" aria-modal="true" aria-labelledby="nboT">
+  <div class="box">
+    <h4 id="nboT">Add non-billable orientation (NBO)?</h4>
+    <p>Usually the NBO is <b>zero</b> for state clients. Do you still want to add NBO hours?</p>
+    <div class="acts"><button type="button" class="no" id="nboNo">No, keep 0</button><button type="button" class="yes2" id="nboYes">Yes, add NBO</button></div>
+  </div>
+</div>
 <footer>Cyberhelp LLC Travel Pay Package Calculator v1.0 (9.5% load, $300 onboarding, 18% desired GP). For internal recruiter use. Approved time off and one-time client fees are not modeled.</footer>
 
 <script>
@@ -359,10 +374,18 @@ footer{max-width:1540px;margin:0 auto;padding:0 22px 24px;font-size:11.5px;color
   $('billOTin').addEventListener('input', () => { if (num('billOTin') > 0) $('clientOT').value = 'Yes'; });
   document.addEventListener('input', calc); document.addEventListener('change', calc);
   $('reset').onclick = () => { if (!confirm('Clear all entries and reset the calculator?')) return;
-    for (const id in DEFAULTS) { const el=$(id); if (el && !['load','ob','gp'].includes(id)) el.value = DEFAULTS[id]; }
+    for (const id in DEFAULTS) { const el=$(id); if (el && !['load','ob','gp','msp'].includes(id)) el.value = DEFAULTS[id]; }
+    lockNbo();
     ['client','notes'].forEach(id => $(id).value='');
     const w=$('w2'); w.classList.remove('auto'); w.readOnly=false; delete w.dataset.manual; $('tnmMsgRow').hidden=true;
     calc(); };
+  function lockNbo(){ const n=$('nbo'); n.value='0'; n.readOnly=true; n.classList.add('locked'); n.title='Locked at 0 – click to add NBO hours'; $('nboLock').textContent='🔒'; }
+  function askNbo(e){ const n=$('nbo'); if(!n.readOnly) return; e.preventDefault(); n.blur(); $('nboModal').hidden=false; $('nboYes').focus(); }
+  ['mousedown','focus','keydown'].forEach(ev => $('nbo').addEventListener(ev, askNbo));
+  $('nboNo').onclick = () => { $('nboModal').hidden=true; };
+  $('nboYes').onclick = () => { const n=$('nbo'); $('nboModal').hidden=true; n.readOnly=false; n.classList.remove('locked'); n.classList.add('opt'); n.title=''; $('nboLock').textContent=''; n.focus(); n.select(); };
+  $('nboModal').addEventListener('click', e => { if(e.target.id==='nboModal') $('nboModal').hidden=true; });
+  document.addEventListener('keydown', e => { if(e.key==='Escape') $('nboModal').hidden=true; });
   $('print').onclick = () => window.print();
   $('copy').onclick = async () => { const c = calc();
     const s = `Pay Package – ${txt('client')||'Client'}\n` +
