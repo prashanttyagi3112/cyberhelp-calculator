@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="logo.png">
 <title>Cyberhelp LLC Pay Package Calculator</title>
 <meta name="description" content="Cyberhelp LLC Travel Pay Package Calculator – 9.5% load on W2, $300 onboarding cost">
 <style>
@@ -18,9 +19,9 @@
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 body{margin:0;background:radial-gradient(1200px 500px at 0% 0%,#e0e7ff 0,transparent 60%),radial-gradient(1000px 500px at 100% 0%,#ccfbf1 0,transparent 55%),var(--bg);color:var(--ink);font:14px/1.4 Inter,"Segoe UI",Calibri,Arial,sans-serif;min-height:100vh}
-header{background:linear-gradient(120deg,#1e1b4b 0%,#4338ca 45%,#0e7490 100%);color:#fff;padding:18px 22px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;box-shadow:0 6px 24px rgba(67,56,202,.35)}
+header{background:linear-gradient(120deg,#001a5c 0%,#002a87 55%,#0b3fa8 100%);border-bottom:4px solid #b07f00;color:#fff;padding:18px 22px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;box-shadow:0 6px 24px rgba(0,42,135,.35)}
 .brand{display:flex;align-items:center;gap:14px}
-.logo{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,#fbbf24,#f97316);display:grid;place-items:center;font-weight:800;font-size:22px;color:#1e1b4b;box-shadow:0 4px 12px rgba(0,0,0,.25)}
+.logo{background:#fff;border-radius:12px;padding:7px 12px;display:flex;align-items:center;box-shadow:0 4px 12px rgba(0,0,0,.25)}.logo img{height:44px;width:auto;display:block}
 header h1{margin:0;font-size:20px;font-weight:800;letter-spacing:.2px}
 header .sub{font-size:12px;opacity:.95;margin-top:4px;display:flex;flex-wrap:wrap;gap:6px}
 .chip{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);padding:2px 9px;border-radius:999px;font-weight:600}
@@ -108,7 +109,7 @@ textarea{resize:vertical;min-height:52px}
 .sub-title{text-align:center;margin:12px 0 4px;font-weight:800;font-size:15px;color:#9a3412}
 footer{max-width:1540px;margin:0 auto;padding:0 22px 24px;font-size:11.5px;color:var(--muted);text-align:center}
 @media (max-width:1150px){main{grid-template-columns:1fr 1fr}.panel.inputs{grid-column:1/-1}}
-@media (max-width:720px){main{grid-template-columns:1fr;padding:12px}.two{grid-template-columns:1fr}.row{grid-template-columns:1.2fr 1fr}header{padding:14px}header h1{font-size:17px}.tile .val{font-size:19px}}
+@media (max-width:720px){.logo img{height:34px}main{grid-template-columns:1fr;padding:12px}.two{grid-template-columns:1fr}.row{grid-template-columns:1.2fr 1fr}header{padding:14px}header h1{font-size:17px}.tile .val{font-size:19px}}
 .print-only{display:none!important}
 @media print{
   @page{size:portrait;margin:12mm}
@@ -131,7 +132,7 @@ footer{max-width:1540px;margin:0 auto;padding:0 22px 24px;font-size:11.5px;color
 <body>
 <header>
   <div class="brand">
-    <div class="logo">C</div>
+    <div class="logo"><img src="logo.png" alt="Cyberhelp LLC"></div>
     <div>
       <h1>Cyberhelp LLC Travel Pay Package Calculator</h1>
       <div class="sub"><span class="chip">9.5% Load on W2</span><span class="chip">$300 Onboarding Cost</span><span class="chip">18% Desired GP</span><span class="chip y">✎ Enter details in YELLOW cells</span></div>
