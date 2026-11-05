@@ -199,7 +199,7 @@ input#nbo.locked{cursor:pointer}
       <div class="sec n"><h3>Admin Use Only</h3>
         <div class="row"><label for="load">🔒 Payroll Load on W2 % (W2 only)</label><div class="v"><input id="load" class="locked" type="number" value="9.5" readonly tabindex="-1" title="Locked – fixed at 9.5%"></div></div>
         <div class="row"><label for="ob">Onboarding / Credentialing ($, New only)</label><div class="v"><input id="ob" type="number" min="0" step="1" value="300"></div></div>
-        <div class="row"><label for="gp">Desired GP / Net Margin %</label><div class="v"><input id="gp" type="number" min="0" step="0.1" value="18"></div></div>
+        <input id="gp" type="hidden" value="18">
         <div class="row"><label for="tnm">🎯 Target Net Margin $ (auto-sets W2 RT; blank = off)</label><div class="v"><input id="tnm" class="opt" type="number" min="0" step="1" placeholder="e.g. 4000"></div></div>
         <div class="row" id="tnmMsgRow" hidden><span class="l" id="tnmMsg" style="grid-column:1/-1;color:#5b21b6;font-weight:600"></span></div>
       </div>
@@ -225,8 +225,6 @@ input#nbo.locked{cursor:pointer}
     <thead><tr><th style="text-align:left"></th><th>Weekly</th><th>Project</th></tr></thead>
     <tbody id="finBody"></tbody>
   </table>
-  <div class="sec t hd"><h3>🎯 Offer Guidance – to hit Desired GP</h3></div>
-  <table class="fin"><tbody id="guideBody"></tbody></table>
 </section>
 
 <!-- ================= CONFIRMATION ================= -->
@@ -356,9 +354,6 @@ input#nbo.locked{cursor:pointer}
     $('kTick').style.left = Math.min(100,gp/scale*100) + '%';
     $('kTgt').textContent = 'Target ' + (gp*100).toFixed(0) + '%'; $('kMax').textContent = (scale*100).toFixed(0) + '%';
     const g = (l,v,sub) => `<tr><td class="b">${l}</td><td class="n ${v<0?'neg':''}"><b>${usd(v)}</b>${sub!==undefined?`<br><span class="${sub<0?'neg':''}" style="font-size:11px">change ${usd(sub)}</span>`:''}</td></tr>`;
-    $('guideBody').innerHTML = g('Max Weekly Per Diem (keep W2 rate)', maxPD, maxPD-pd) + g('Max W2 RT Rate (keep Per Diem)', maxW2, maxW2-w2) +
-      `<tr><td class="b">Target Net Margin $ at ${(gp*100).toFixed(0)}%</td><td class="n">${usd(target,0)}</td></tr>` +
-      `<tr><td class="b">Gap to target</td><td class="n ${gap<0?'neg':''}"><b>${usd(gap,0)}</b></td></tr>`;
 
     const line = (id, label, val, req) => { $(id).innerHTML = val ? `${label}: ${val}` : (req ? `<span class="err">*** Error – Must Enter ${label}</span>` : `${label}: Not provided`); };
     line('cClient','Client Name',txt('client'),true);

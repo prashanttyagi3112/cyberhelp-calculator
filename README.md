@@ -9,7 +9,7 @@ Web calculator for Cyberhelp LLC recruiters to check margin on travel nurse pay 
 | Onboarding (OB) cost | **$300** per new placement (not charged on extensions) |
 | MSP/VMS fee | **0%** – locked |
 | NBO (non-billable orientation) | **0 hrs** – locked; clicking it asks "Usually the NBO is zero for state clients. Do you still want to add NBO hours?" and unlocks only on Yes |
-| Desired GP / net margin | **18%** of revenue |
+| Desired GP / net margin | **18%** of revenue (fixed; used for the "Meets Desired GP?" check) |
 | Client OT | "Client bills OT? = No" bills every hour at straight time |
 
 ## Use it online
